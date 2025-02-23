@@ -569,6 +569,7 @@ def update_config(config, args):
     # configured log directory (runs/exp by default)
     if config.TOOLBOX_MODE == 'train_and_test' or config.TOOLBOX_MODE == 'only_test':
         config.TEST.OUTPUT_SAVE_DIR = os.path.join(config.LOG.PATH, config.TEST.DATA.EXP_DATA_NAME, 'saved_test_outputs')
+        print("-----------------Print config dir:",config.TEST.OUTPUT_SAVE_DIR)
     elif config.TOOLBOX_MODE == 'unsupervised_method':
         config.UNSUPERVISED.OUTPUT_SAVE_DIR = os.path.join(config.LOG.PATH, config.UNSUPERVISED.DATA.EXP_DATA_NAME, 'saved_outputs')
     else:
