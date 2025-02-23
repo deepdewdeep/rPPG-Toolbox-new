@@ -98,14 +98,19 @@ class PhysMambaTrainer(BaseTrainer):
                 data = data.to(self.device)
                 label = label.to(self.device)
 
-                print("-----------------label shape:",label.shape)
+                # print("-----------------label shape:",label.shape)
 
                 # Example: If label dimension is [N, 1, T] or [N, X, ...], 
                 # and you only need a single scalar target, you might do:
                 # label = label.mean(dim=(-1, -2, ...)) or
                 # label = label.squeeze()  # Adjust as needed based on your data shape.
                 # If your label is purely [N, 1], you might not need extra squeezing.
-                label = label.squeeze()
+
+                label = label.mean(dim=1, keepdim=True)
+                print("-----------------averaged label shape:",label.shape)
+
+                # label = label.squeeze()
+
 
                 self.optimizer.zero_grad()
 
@@ -115,6 +120,8 @@ class PhysMambaTrainer(BaseTrainer):
                 # If your model outputs shape [N] or [N, 1], unify them:
                 if len(pred_spo2.shape) > 1:
                     pred_spo2 = pred_spo2.squeeze()
+                print("-----------------pred spo2 squeezed:",pred_spo2.shape)
+
 
                 # Calculate RMSE (you could do MSE; here, we demonstrate RMSE)
                 mse_loss = torch.mean((pred_spo2 - label) ** 2)
