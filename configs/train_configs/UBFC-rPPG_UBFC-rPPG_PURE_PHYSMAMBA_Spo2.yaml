@@ -2,7 +2,7 @@ BASE: ['']
 TOOLBOX_MODE: "train_and_test" # "train_and_test"  or "only_test"
 TRAIN:
   BATCH_SIZE: 4
-  EPOCHS: 20
+  EPOCHS: 10
   LR: 3e-3
   MODEL_FILE_NAME: UBFC_UBFC_PURE_PhysMamba_Spo2
   PLOT_LOSSES_AND_LR: True
