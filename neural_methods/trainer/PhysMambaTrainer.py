@@ -169,7 +169,10 @@ class PhysMambaTrainer(BaseTrainer):
 
                 data, label = valid_batch[0].float(), valid_batch[1].float()
                 data = data.to(self.device)
-                label = label.to(self.device).squeeze()
+                label = label.to(self.device)
+
+                label = label.mean(dim=1, keepdim=True)
+                label = label.squeeze()
 
                 pred_spo2 = self.model(data)
                 if len(pred_spo2.shape) > 1:
