@@ -15,6 +15,9 @@ from torch.autograd import Variable
 from tqdm import tqdm
 from scipy.signal import welch
 
+import torch.nn.functional as F
+
+
 
 class PhysMambaTrainer(BaseTrainer):
 

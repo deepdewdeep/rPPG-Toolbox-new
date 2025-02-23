@@ -181,6 +181,9 @@ class PhysMamba(nn.Module):
 
         self.poolspa = nn.AdaptiveAvgPool3d((frames, 1, 1))
 
+        self.fc = nn.Linear(frames, 1)
+
+
     def _build_block(self, channels, theta):
         return nn.Sequential(
             CDC_T(channels, channels, theta=theta),
@@ -245,4 +248,6 @@ class PhysMamba(nn.Module):
 
         print("-------------model output shape: ",rPPG.shape)
 
-        return rPPG    
+        output = self.fc(rPPG)
+
+        return output
