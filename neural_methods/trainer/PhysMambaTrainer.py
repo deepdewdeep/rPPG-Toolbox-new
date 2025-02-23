@@ -98,6 +98,8 @@ class PhysMambaTrainer(BaseTrainer):
                 data = data.to(self.device)
                 label = label.to(self.device)
 
+                print("-----------------label shape:",label.shape)
+
                 # Example: If label dimension is [N, 1, T] or [N, X, ...], 
                 # and you only need a single scalar target, you might do:
                 # label = label.mean(dim=(-1, -2, ...)) or
