@@ -109,7 +109,7 @@ class PhysMambaTrainer(BaseTrainer):
                 label = label.mean(dim=1, keepdim=True)
                 print("-----------------averaged label shape:",label.shape)
 
-                # label = label.squeeze()
+                label = label.squeeze()
 
 
                 self.optimizer.zero_grad()
