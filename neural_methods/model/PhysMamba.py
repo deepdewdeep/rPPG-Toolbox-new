@@ -246,8 +246,11 @@ class PhysMamba(nn.Module):
 
         rPPG = x_final.view(-1, length)
 
-        print("-------------model output shape: ",rPPG.shape)
+        # print("-------------model before fc output shape: ",rPPG.shape)
 
         output = self.fc(rPPG)
+
+        print("-------------model output shape: ",output.shape)
+
 
         return output
