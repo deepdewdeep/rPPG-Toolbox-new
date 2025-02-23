@@ -353,7 +353,7 @@ _C.NUM_OF_GPU_TRAIN = 1
 # Log settings
 # -----------------------------------------------------------------------------
 _C.LOG = CN()
-_C.LOG.PATH = "runs/exp"
+_C.LOG.PATH = "/content/drive/MyDrive/DDCache/PhysMambaSF_SP/runs/exp"
 
 
 def _update_config_from_file(config, cfg_file):
