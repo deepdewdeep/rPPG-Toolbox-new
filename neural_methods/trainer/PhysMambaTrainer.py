@@ -236,6 +236,7 @@ class PhysMambaTrainer(BaseTrainer):
                 data, label = test_batch[0].to(self.device), test_batch[1].to(self.device)
 
                 label = label.mean(dim=1, keepdim=True)# mean over the channel dimension
+                print("-----------------averaged label :",label)
 
 
                 # Forward pass
