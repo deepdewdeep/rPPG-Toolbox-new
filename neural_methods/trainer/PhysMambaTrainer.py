@@ -255,6 +255,8 @@ class PhysMambaTrainer(BaseTrainer):
                         predictions[subj_index] = dict()
                         labels[subj_index] = dict()
 
+                    print("-------------debugging pred_spo2_test:",pred_spo2_test)
+
                     # You can store these in predictions/labels for further analysis
                     predictions[subj_index][sort_index] = pred_spo2_test[idx]
                     labels[subj_index][sort_index] = label[idx].squeeze()
