@@ -257,7 +257,7 @@ class PhysMambaTrainer(BaseTrainer):
 
                     # You can store these in predictions/labels for further analysis
                     predictions[subj_index][sort_index] = pred_spo2_test[idx]
-                    labels[subj_index][sort_index] = label[idx].squeeze(dim=1)
+                    labels[subj_index][sort_index] = label[idx].squeeze()
 
         print('')
         # If you have a custom SpO2-based metric, you could call it here
