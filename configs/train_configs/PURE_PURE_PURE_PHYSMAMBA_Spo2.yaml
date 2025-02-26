@@ -105,4 +105,4 @@ INFERENCE:
   EVALUATION_WINDOW:
     USE_SMALLER_WINDOW: False
     WINDOW_SIZE: 10                     # Evaluation window size in seconds
-  MODEL_PATH: "/content/drive/MyDrive/DDCache/PhysMambaSF_SP/TrainedModels/PURE_PURE_PURE_PhysMambaSF_SpO2_Epoch9.pth"
+  MODEL_PATH: "/content/drive/MyDrive/DDCache/PhysMambaSF_SP/TrainedModels/PURE_PURE_PURE_PhysMambaSF_SpO2_Epoch6.pth"
