@@ -235,6 +235,9 @@ class PhysMambaTrainer(BaseTrainer):
                 batch_size = test_batch[0].shape[0]
                 data, label = test_batch[0].to(self.device), test_batch[1].to(self.device)
 
+                label = label.mean(dim=1, keepdim=True)# mean over the channel dimension
+
+
                 # Forward pass
                 pred_spo2_test = self.model(data)
                 if len(pred_spo2_test.shape) > 1:
