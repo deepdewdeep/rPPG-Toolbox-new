@@ -32,6 +32,12 @@ class PhysMambaTrainer(BaseTrainer):
         self.min_valid_loss = None
         self.best_epoch = 0
         self.diff_flag = 0
+
+        #logging
+        self.train_loss_history = []
+        self.valid_loss_history = []
+        self.lr_history = []
+
         if config.TRAIN.DATA.PREPROCESS.LABEL_TYPE == "DiffNormalized":
             self.diff_flag = 1
         self.frame_rate = config.TRAIN.DATA.FS
@@ -107,10 +113,10 @@ class PhysMambaTrainer(BaseTrainer):
                 # If your label is purely [N, 1], you might not need extra squeezing.
 
                 label = label.mean(dim=1, keepdim=True)
-                print("-----------------averaged label shape:",label.shape)
+                # print("-----------------averaged label shape:",label.shape)
 
                 label = label.squeeze()
-                print("-----------------averaged squeezed label shape:",label.shape)
+                # print("-----------------averaged squeezed label shape:",label.shape)
 
 
                 self.optimizer.zero_grad()
@@ -134,18 +140,40 @@ class PhysMambaTrainer(BaseTrainer):
                 self.optimizer.step()
                 self.scheduler.step()
 
+                # Keep track of LR (OneCycleLR changes it every iteration, but you can log it per epoch if you want)
+                current_lr = self.scheduler.get_last_lr()[0]
+
                 tbar.set_postfix(loss=rmse_loss.item())
+
+            #logging
+            # Average loss for this epoch
+            avg_loss = running_loss / len(data_loader["train"])
+            self.train_loss_history.append(avg_loss)
+            self.lr_history.append(current_lr)
 
             self.save_model(epoch)
 
             # Validation logic
             if not self.config.TEST.USE_LAST_EPOCH:
                 valid_loss = self.valid(data_loader)
+
+                self.valid_loss_history.append(valid_loss)
+
                 print('validation loss: ', valid_loss)
                 if self.min_valid_loss is None or (valid_loss < self.min_valid_loss):
                     self.min_valid_loss = valid_loss
                     self.best_epoch = epoch
                     print("Update best model! Best epoch:", self.best_epoch)
+
+            # Now, if PLOT_LOSSES_AND_LR is True, call the plotting function
+            if self.config.TRAIN.PLOT_LOSSES_AND_LR:
+                # Pass the entire history so far. 
+                self.plot_losses_and_lrs(
+                    train_loss=self.train_loss_history,
+                    valid_loss=self.valid_loss_history,
+                    lrs=self.lr_history,
+                    config=self.config
+                )
 
             torch.cuda.empty_cache()
 
@@ -233,13 +261,13 @@ class PhysMambaTrainer(BaseTrainer):
         with torch.no_grad():
             for _, test_batch in enumerate(tqdm(data_loader["test"], ncols=80)):
 
-                print("-------------debugging test_batch:",test_batch)
+                # print("-------------debugging test_batch:",test_batch)
 
                 batch_size = test_batch[0].shape[0]
                 data, label = test_batch[0].to(self.device), test_batch[1].to(self.device)
 
                 label = label.mean(dim=1, keepdim=True)# mean over the channel dimension
-                print("-----------------averaged label :",label)
+                # print("-----------------averaged label :",label)
 
 
                 # Forward pass
@@ -259,7 +287,7 @@ class PhysMambaTrainer(BaseTrainer):
                         predictions[subj_index] = dict()
                         labels[subj_index] = dict()
 
-                    print("-------------debugging pred_spo2_test:",pred_spo2_test)
+                    # print("-------------debugging pred_spo2_test:",pred_spo2_test)
 
                     # You can store these in predictions/labels for further analysis
                     predictions[subj_index][sort_index] = pred_spo2_test[idx]
@@ -267,7 +295,7 @@ class PhysMambaTrainer(BaseTrainer):
 
         print('')
         # If you have a custom SpO2-based metric, you could call it here
-        calculate_metrics(predictions, labels, self.config)
+        # calculate_metrics(predictions, labels, self.config)
 
         if self.config.TEST.OUTPUT_SAVE_DIR:  # saving test outputs 
             self.save_test_outputs(predictions, labels, self.config)

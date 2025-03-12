@@ -412,16 +412,8 @@ class BaseLoader(Dataset):
         """
 
         clip_num = frames.shape[0] // chunk_length
-        bvps_clips = []
-        frames_clips = []
-        # frames_clips = [frames[i * chunk_length:(i + 1) * chunk_length] for i in range(clip_num)]
-        # bvps_clips = [bvps[i * chunk_length:(i + 1) * chunk_length] for i in range(clip_num)]
-        for i in range(clip_num):
-            bvp_clip = bvps[i * chunk_length:(i + 1) * chunk_length]
-            bvp_clip_mean = np.mean(bvp_clip)
-            if bvp_clip_mean >= 90:
-                bvps_clips.append(bvp_clip)
-                frames_clips.append(frames[i * chunk_length:(i + 1) * chunk_length])
+        frames_clips = [frames[i * chunk_length:(i + 1) * chunk_length] for i in range(clip_num)]
+        bvps_clips = [bvps[i * chunk_length:(i + 1) * chunk_length] for i in range(clip_num)]
         return np.array(frames_clips), np.array(bvps_clips)
 
     def save(self, frames_clips, bvps_clips, filename):
